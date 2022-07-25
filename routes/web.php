@@ -60,6 +60,7 @@ Route::group(['prefix' => 'masterdata', "middleware" => ['Auth']], function(){
     // Route Previleges
     Route::get('/acl', [AclController::class, 'index'])->name('masterdata.acl');
     Route::get('/acl/access/{id}', [AclController::class, 'access'])->name('masterdata.acl.access');
+    Route::post('/acl/update', [AclController::class, 'update_access'])->name('masterdata.acl.update');
 
     // Menu List
     Route::get('/menu', [MenuController::class, 'index'])->name('masterdata.menu');

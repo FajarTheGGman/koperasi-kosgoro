@@ -76,7 +76,8 @@ class AuthController extends Controller
                 $users->session()->put([
                     'email' => $user->email,
                     'fullname' => $user->fullname,
-                    'picture' => $user->picture
+                    'picture' => $user->picture,
+                    'role_id' => $user->role_id
                 ]);
                 return redirect()->route('dashboard');
             }else{

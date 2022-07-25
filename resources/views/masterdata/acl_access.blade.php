@@ -6,12 +6,15 @@
 		    <h1 class="h3 mb-3"><strong>Access Control</strong> Modify</h1>
             <div class='card'>
                 <div class='card-body'>
-                    <form>
+                    <form action="{{ route('masterdata.acl.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="role_id" value="{{ $roles->id }}">
                         <table class='table table-stripped' id='data'>
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Menu</th>
+                                    <th>Modify</th>
                                     <th>Access</th>
                                     <th>Write</th>
                                     <th>Update</th>
@@ -23,23 +26,30 @@
                                 @foreach( $menu_child as $data )
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->name }}</td>
                                         <td>
-                                            <input type="checkbox" name="access[]" value="{{ $data->id }}" {{ $data->access == 1 ? 'checked' : '' }}>
+                                            <input type="hidden" name="menu_id[]" value="{{ $data->id }}">
+                                            {{ $data->name }}
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="write[]" value="{{ $data->id }}" {{ $data->write == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="modify[]" value="{{ $data->id }}" {{ $data->modify == 1 ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="update[]" value="{{ $data->id }}" {{ $data->update == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="access[]" value="1" {{ $data->access == 1 ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="delete[]" value="{{ $data->id }}" {{ $data->delete == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="write[]" value="1" {{ $data->write == 1 ? 'checked' : '' }}>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="update[]" value="1" {{ $data->update == 1 ? 'checked' : '' }}>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" name="delete[]" value="1" {{ $data->delete == 1 ? 'checked' : '' }}>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </form>
                 </div>
             </div>
@@ -47,7 +57,7 @@
     </main>
 @endsection
 
-@section('javascript')
+@section('js')
     <script>
         $(document).ready(function(){
             $("#data").DataTable()

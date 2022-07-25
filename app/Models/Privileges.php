@@ -12,7 +12,7 @@ class Privileges extends Model
     public $timestamps = false;
 
     public function roles(){
-        return $this->belongsToMany('App\Models\Roles', 'role_id');
+        return $this->belongsTo('App\Models\Roles', 'role_id');
     }
 
     public function menu_id(){

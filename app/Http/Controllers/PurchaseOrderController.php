@@ -6,23 +6,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Models\PurchaseOrder;
+use App\Models\ProductsPurchase;
+use App\Models\PurchaseRequest;
 
 class PurchaseOrderController extends Controller
 {
     public function index(){
-        if(Session::has('email')){
-            $purchase_order = DB::table('purchase_order')->select('supplyer.id as sid', 'purchase_order.id', 'purchase_order.status','purchase_order.name', 'purchase_order.quantity', 'purchase_order.price', 'purchase_order.type', 'purchase_order.image', 'supplyer.nama', 'purchase_order.sell_price', 'purchase_order.rak')->join('supplyer', 'purchase_order.supplier_id', '=', 'supplyer.id')->get();
-            return view('purchase.order', ['purchase_order' => $purchase_order]);
-        }else{
-            return back();
+        $purchase_order = PurchaseOrder::with('purchase_request')->get();
+        return view('purchase.order', ['purchase_order' => $purchase_order]);
+    }
+
+    public function approve($id){
+        $purchase_order = PurchaseOrder::with('purchase_request')->where('id', $id)->first();
+        $product_purchase = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
+        foreach($product_purchase as $product){
+            ProductsPurchase::where('id', $product->id)->update([
+                'status' => 'Sold'
+            ]);
         }
+        PurchaseRequest::where('rack_id', $purchase_order->purchase_request->rack_id)->delete();
+        PurchaseOrder::where('id', $id)->update([
+            'status' => 'Approved'
+        ]);
+        return back()->with('Success', 'Data berhasil di approve');
+    }
+
+    public function delete($id){
+        $purchase_order = PurchaseOrder::find($id);
+        $purchase_order->delete();
+        return back()->with('Success', 'Data berhasil dihapus');
     }
 
     public function invoice(){
-        if(Session::has('email')){
-            return view('purchase.invoice');
-        }else{
-            return back();
-        }
+        return view('purchase.invoice');
     }
 }

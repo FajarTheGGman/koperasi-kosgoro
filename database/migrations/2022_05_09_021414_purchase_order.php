@@ -17,7 +17,7 @@ class PurchaseOrder extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->foreignId('pr_id');
-            $table->foreign('pr_id')->references('id')->on('purchase_request');
+            $table->foreign('pr_id')->references('id')->on('laporan_pr');
             $table->string('supplyer');
             $table->string('total_price');
             $table->timestamps();

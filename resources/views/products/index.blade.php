@@ -19,7 +19,6 @@
                                 <th>Type</th>
                                 <th>Image</th>
                                 <th>Barcode</th>
-                                <th>Rack</th>
                                 <th>Sell Price</th>
                                 <th>Delete</th>
                             </tr>
@@ -33,9 +32,11 @@
                                     <td>{{ $data->quantity }}</td>
                                     <td>{{ $data->price }}</td>
                                     <td>{{ $data->type }}</td>
-                                    <td>{{ $data->image }}</td>
-                                    <td>{{ $data->barcode }}</td>
-                                    <td>{{ $data->rack->name }}</td>
+                                    <td>
+                                        <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px">
+                                    </td>
+                                    <td>
+                                    </td>
                                     <td>{{ $data->sell_price }}</td>
                                     <td>
                                         <a href="{{ route('products.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
@@ -90,14 +91,6 @@
                                     <label for="sell_price">Sell Price</label>
                                     <input type="number" class='form-control' id='sell_price' name='sell_price' placeholder="Sell Price"/>
                                 </div>
-                                <div class='form-group mt-4'>
-                                    <label for="rak">Rack</label>
-                                    <select class='form-control' id='rack' name='rack_id'>
-                                        @foreach( $racks as $r )
-                                            <option value="{{ $r->id }}">{{ $r->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>
@@ -113,6 +106,8 @@
     <script>
         $(document).ready(function(){
             $('#data').DataTable();
+
+            // format #price with currency
         });
     </script>
 @endsection

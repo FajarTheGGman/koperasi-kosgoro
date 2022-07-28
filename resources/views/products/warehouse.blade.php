@@ -16,9 +16,9 @@
                                 <th>Type</th>
                                 <th>Image</th>
                                 <th>Barcode</th>
-                                <th>Supplyer</th>
                                 <th>Sell Price</th>
                                 <th>Rak</th>
+                                <th>Status</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -33,11 +33,12 @@
                                     <td>{{ $data->type }}</td>
                                     <td>{{ $data->image }}</td>
                                     <td>{{ $data->barcode }}</td>
-                                    <td>{{ $data->supplier->nama }}</td>
                                     <td>{{ $data->sell_price }}</td>
-                                    <td>{{ $data->rak }}</td>
+                                    <td>{{ $data->rack->name }}</td>
                                     <td>
-                                        <a href="{{ route('products.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
+                                        <b class='text text-success'>{{ $data->status }}</b>
+                                    <td>
+                                        <a href="{{ route('products.warehouse.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                     </td>
                                 </tr>
                             @endforeach

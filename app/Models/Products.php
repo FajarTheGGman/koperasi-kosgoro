@@ -21,11 +21,6 @@ class Products extends Model
         'barcode',
         'expired_date',
         'total_income',
-        'rack_id'
     ];
-
-    public function rack(){
-        return $this->belongsTo('App\Models\Rack', 'rack_id');
-    }
 
 }

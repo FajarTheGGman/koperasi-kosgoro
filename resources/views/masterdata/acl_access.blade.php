@@ -23,7 +23,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach( $menu_child as $data )
+                                @foreach( $menu_child as $key => $data )
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
@@ -31,19 +31,19 @@
                                             {{ $data->name }}
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="modify[]" value="{{ $data->id }}" {{ $data->modify == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="modify[]" value="{{ $data->id }}" checked>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="access[]" value="1" {{ $data->access == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="access[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->access == 1 ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="write[]" value="1" {{ $data->write == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="write[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->write == 1 ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="update[]" value="1" {{ $data->update == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="update[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->update == 1 ? 'checked' : '' }}>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="delete[]" value="1" {{ $data->delete == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="delete[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->delete == 1 ? 'checked' : '' }}>
                                         </td>
                                     </tr>
                                 @endforeach

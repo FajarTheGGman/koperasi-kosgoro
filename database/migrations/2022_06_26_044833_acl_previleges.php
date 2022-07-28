@@ -17,6 +17,8 @@ class AclPrevileges extends Migration
             $table->bigIncrements('id');
             $table->foreignId('role_id');
             $table->foreignId('menu_id');
+            $table->foreignId('parent_id');
+            $table->foreign('parent_id')->references('id')->on('menu_parent');
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('menu_id')->references('id')->on('menu_child');
             $table->boolean('access')->default(1);

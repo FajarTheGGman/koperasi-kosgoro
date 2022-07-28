@@ -52,14 +52,6 @@
 											<label class="form-label">Password</label>
 											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
 										</div>
-										<div class="mb-3">
-											<label class="form-label">Roles</label>
-                                            <select class="form-control form-control-lg" name="roles">
-                                                @foreach( $roles as $role )
-                                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                                @endforeach
-                                            </select>
-										</div>
 										<div>
 											<label class="form-check">
             <input class="form-check-input" type="checkbox" value="remember-me" name="remember-me" checked>

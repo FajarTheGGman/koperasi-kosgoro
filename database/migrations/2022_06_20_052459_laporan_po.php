@@ -16,18 +16,10 @@ class LaporanPo extends Migration
         Schema::create('laporan_po', function(Blueprint $table){
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('quantity');
-            $table->string('price');
-            $table->string('type');
-            $table->string('image');
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreignId('supplier_id');
-            $table->foreign('supplier_id')->references('id')->on('supplyer');
-            $table->string('sell_price');
-            $table->string('rak');
-            $table->string('status');
-            $table->string('description');
+            $table->foreignId('pr_id');
+            $table->foreign('pr_id')->references('id')->on('purchase_request');
+            $table->string('supplyer');
+            $table->string('total_price');
             $table->timestamps();
         });
     }

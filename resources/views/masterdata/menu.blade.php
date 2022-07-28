@@ -15,6 +15,7 @@
                             <thead>
                                 <th>No</th>
                                 <th>Name</th>
+                                <th>Icons</th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </thead>
@@ -24,9 +25,12 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
+                                        <td>
+                                            <i data-feather="{{ $data->icons }}"></i>
+                                        </td>
                                         <td>{{ $data->description }}</td>
                                         <td>
-                                            <a href='#' class='btn btn-warning'>Edit</a>
+                                            <a href='{{ route('masterdata.menu.parent.edit', $data->id) }}' class='btn btn-warning'>Edit</a>
                                             <a href="{{ route('masterdata.menu.parent.delete', $data->id) }}" class='btn btn-danger'>Delete</a>
                                         </td>
                                     </tr>
@@ -60,7 +64,7 @@
                                         <td>{{ $data->menu_parent->name }}</td>
                                         <td>{{ $data->description }}</td>
                                         <td>
-                                            <a href='#' class='btn btn-warning'>Edit</a>
+                                            <a href="{{ route('masterdata.menu.child.edit', $data->id) }}" class='btn btn-warning'>Edit</a>
                                             <a href="{{ route('masterdata.menu.child.delete', $data->id) }}" class='btn btn-danger'>Delete</a>
                                         </td>
                                     </tr>
@@ -75,12 +79,12 @@
             <div class='modal fade' id='add_parent' tabindex='-1' role='dialog' aria-labelledby='add' aria-hidden='true'>
                 <div class='modal-dialog' role='document'>
                     <div class='modal-content'>
-                        <div class='modal-header'>
-                            <b class='modal-title' id='add'>Add Parent</b>
-                        </div>
-                        <div class='modal-body'>
-                            <form action="{{ route('masterdata.menu.parent.add') }}" method="post">
-                                @csrf
+                        <form action="{{ route('masterdata.menu.parent.add') }}" method="post">
+                        @csrf
+                            <div class='modal-header'>
+                                <b class='modal-title' id='add'>Add Parent</b>
+                            </div>
+                            <div class='modal-body'>
                                 <div class='form-group'>
                                     <label for='name'>Name</label>
                                     <input type='text' name='name' class='form-control' id='name' placeholder='Name'>
@@ -89,12 +93,18 @@
                                     <label for='description'>Description</label>
                                     <input type='text' name='description' class='form-control' id='description' placeholder='Description'>
                                 </div>
+                                <!-- form icons -->
+                                <div class='form-group mt-2'>
+                                    <label for='icons'>Icons</label>
+                                    <input type='text' name='icons' class='form-control' id='icons' placeholder='Icons'>
+                                </div>
+                            </div>
                                 <div class='modal-footer'>
                                     <button type='button' class='btn btn-danger' data-bs-dismiss='modal'>Close</button>
                                     <button type='submit' class='btn btn-primary'>Save</button>
                                 </div>
-                            </form>
-                        </div>
+                        </form>
+
                     </div>
                 </div>
             </div>

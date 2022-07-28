@@ -32,7 +32,7 @@ use App\Models\Users;
 |
 */
 
-Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('Auth');
+Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard')->middleware(['Auth', 'ACL']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'auth'], function () {
     })->name('logout');
 });
 
-Route::group(['prefix' => 'masterdata', "middleware" => ['Auth']], function(){
+Route::group(['prefix' => 'masterdata', "middleware" => ['Auth', 'ACL']], function(){
     Route::get('/users', [UsersController::class, 'index'])->name('masterdata.users');
     Route::get('/users/delete/{id}', [UsersController::class, 'delete'])->name('masterdata.users.delete');
     Route::post('/users/create', [UsersController::class, 'register'])->name('masterdata.users.create');
@@ -68,26 +68,32 @@ Route::group(['prefix' => 'masterdata', "middleware" => ['Auth']], function(){
     Route::post('/menu/child/add', [MenuController::class, 'add_child'])->name('masterdata.menu.child.add');
     Route::get('/menu/parent/delete/{id}', [MenuController::class, 'delete_parent'])->name('masterdata.menu.parent.delete');
     Route::get('/menu/child/delete/{id}', [MenuController::class, 'delete_child'])->name('masterdata.menu.child.delete');
+    Route::get('/menu/parent/edit/{id}', [MenuController::class, 'edit_parent'])->name('masterdata.menu.parent.edit');
+    Route::get('/menu/child/edit/{id}', [MenuController::class, 'edit_child'])->name('masterdata.menu.child.edit');
+    Route::post('/menu/parent/update', [MenuController::class, 'update_parent'])->name('masterdata.menu.parent.edit.update');
+    Route::post('/menu/child/update', [MenuController::class, 'update_child'])->name('masterdata.menu.child.edit.update');
 
-    // route enumeration
     Route::get('/enumeration', [EnumerationController::class, 'index'])->name('masterdata.enumeration');
     Route::get('/enumeration/delete/{id}', [EnumerationController::class, 'delete'])->name('masterdata.enumeration.delete');
     Route::post('/enumeration/add', [EnumerationController::class, 'add'])->name('masterdata.enumeration.add');
 });
 
-Route::group(['prefix' => 'purchase', 'middleware' => 'Auth'], function(){
+Route::group(['prefix' => 'purchase', 'middleware' => ['Auth', 'ACL']], function(){
     Route::get('/request', [PurchaseRequestController::class, 'request'])->name('purchase.request');
     Route::post('/request/add', [PurchaseRequestController::class, 'add'])->name('purchase.request.add');
     Route::get('/request/delete/{id}', [PurchaseRequestController::class, 'delete'])->name('purchase.request.delete');
     Route::get('/request/approve/{id}', [PurchaseRequestController::class, 'approve'])->name('purchase.request.approve');
-    Route::get('/request/order', [PurchaseRequestController::class, 'purchase_order'])->name('purchase.request.order');
+    Route::get('/request/order/{id}', [PurchaseRequestController::class, 'purchase_order'])->name('purchase.request.order');
     Route::get('/order', [PurchaseOrderController::class, 'index'])->name('purchase.order');
+    Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'delete'])->name('purchase.order.delete');
+    Route::get('/order/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('purchase.order.approve');
     Route::get('/order/invoice', [PurchaseOrderController::class, 'invoice'])->name('purchase.invoice');
 });
 
-Route::group(['prefix' => 'products', 'middleware' => 'Auth'], function(){
+Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function(){
     Route::get('/', [ProductsController::class, 'index'])->name('products.index');
     Route::get('/warehouse', [ProductsController::class, 'warehouse'])->name('products.warehouse');
+    Route::get('/warehouse/delete/{id}', [ProductsController::class, 'warehouse_delete'])->name('products.warehouse.delete');
     Route::get('/edit/{id}', [ProductsController::class, 'edit'])->name('products.edit');
     Route::get('/delete/{id}', [ProductsController::class, 'delete'])->name('products.delete');
     Route::post('/add', [ProductsController::class, 'add'])->name('products.create');
@@ -96,7 +102,7 @@ Route::group(['prefix' => 'products', 'middleware' => 'Auth'], function(){
 });
 
 // rack route
-Route::group(['prefix' => 'rack', 'middleware' => 'Auth'], function(){
+Route::group(['prefix' => 'rack', 'middleware' => ['Auth', 'ACL']], function(){
     Route::get('/', [RackController::class, 'index'])->name('rack.index');
     Route::get('/edit/{id}', [RackController::class, 'edit'])->name('rack.edit');
     Route::get('/delete/{id}', [RackController::class, 'delete'])->name('rack.delete');

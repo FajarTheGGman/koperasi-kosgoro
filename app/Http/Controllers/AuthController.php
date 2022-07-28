@@ -11,6 +11,8 @@ use App\Models\Products;
 use App\Models\Supplier;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseOrder;
+use App\Models\Privileges;
+use App\Models\MenuParent;
 
 class AuthController extends Controller
 {
@@ -39,12 +41,18 @@ class AuthController extends Controller
     }
 
     public function dashboard(Request $user){
+        $privileges = Privileges::with('roles', 'menu')->where('role_id', $user->session()->get('role_id'))->get();
+        $menu_parent = MenuParent::all();
+
         return view('index', [
             'products' => Products::all(),
             'suppliers' => Supplier::all(),
             'purchase_requests' => PurchaseRequest::all(),
             'purchase_orders' => PurchaseOrder::all(),
-            'users' => Users::all()
+            'users' => Users::all(),
+            'roles' => Roles::all(),
+            'privileges' => $privileges,
+            'menu_parent' => $menu_parent
         ]);
     }
 

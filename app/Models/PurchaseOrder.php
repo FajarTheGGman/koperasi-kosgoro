@@ -17,10 +17,12 @@ class PurchaseOrder extends Model
         'price',
         'type',
         'image',
-        'supplier_id',
         'status',
         'sell_price',
         'rak'
     ];
 
+    public function purchase_request(){
+        return $this->belongsTo('App\Models\LaporanPR', 'pr_id');
+    }
 }

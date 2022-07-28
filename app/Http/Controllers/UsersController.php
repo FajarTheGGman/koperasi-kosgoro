@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Users;
 use App\Models\Roles;
+use App\Models\Notification;
 
 class UsersController extends Controller
 {
@@ -39,8 +40,12 @@ class UsersController extends Controller
             $newUser->picture = 'https://avatars.dicebear.com/api/initials/'.$user->fullname.'.png';
             $newUser->role_id = $role;
             $newUser->save();
-            toast('User successfully registered!', 'success');
-            return back();
+            Notification::insert([
+                'title' => 'New User',
+                'body' => 'User baru : '.$user->fullname.' telah terdaftar',
+                'icons' => 'user'
+            ]);
+            return back()->with('Success', 'Users berhasil dibuat');
         }
     }
 

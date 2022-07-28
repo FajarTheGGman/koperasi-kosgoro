@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\Roles;
 use App\Models\MenuChild;
 use App\Models\Privileges;
+use App\Models\MenuParent;
 
 class AclController extends Controller
 {
     public function index(Request $users){
         $roles = Roles::all();
-        $privileges = Privileges::with('roles')->get();
-        return view('masterdata.acl', compact('roles', 'privileges'));
+        $privileges = Privileges::with('roles', 'menu')->where('role_id', $users->session()->get('role_id'))->get();
+        $menu_parent = MenuParent::all();
+        return view('masterdata.acl', compact('roles', 'privileges', 'menu_parent'));
     }
 
 
@@ -27,7 +29,7 @@ class AclController extends Controller
         for( $i = 0; $i < count($user->modify); $i++ ){
             $check = Privileges::where('role_id', $user->role_id)->where('menu_id', $user->modify[$i])->first();
             if($check){
-                Privileges::where('role_id', $user->role_id)->where('menu_id', $user->menu_id)->update([
+                Privileges::where('role_id', $user->role_id)->where('menu_id', $user->modify[$i])->update([
                     'access' => isset($user->access[$i]) == true ? ($user->access[$i] == '1' ? 1 : 0) : 0,
                     'write' => isset($user->write[$i]) == true ? ($user->write[$i] == '1' ? 1 : 0) : 0,
                     'update' => isset($user->update[$i]) == true ? ($user->update[$i] == '1' ? 1 : 0) : 0,
@@ -38,6 +40,7 @@ class AclController extends Controller
                 Privileges::insert([
                     'role_id' => $user->role_id,
                     'menu_id' => $user->modify[$i],
+                    'parent_id' => MenuChild::where('id', $user->modify[$i])->first()->menu_parent_id,
                     'access' => isset($user->access[$i]) == true ? ($user->access[$i] == '1' ? 1 : 0) : 0,
                     'write' => isset($user->write[$i]) == true ? ($user->write[$i] == '1' ? 1 : 0) : 0,
                     'update' => isset($user->update[$i]) == true ? ($user->update[$i] == '1' ? 1 : 0) : 0,

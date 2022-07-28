@@ -13,9 +13,10 @@
 	<link rel="shortcut icon" href="{{ url('/assets/img/icons/icon-48x48.png') }}" />
     <link rel="stylesheet" href="{{ url('/assets/css/bootstrap.min.css') }}"/>
     <link rel="stylesheet" href="{{ url('/assets/css/dataTables.bootstrap5.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url('/assets/css/toastr.min.css') }}"/>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+	<link rel="stylesheet" href="https://ireade.github.io/Toast.js/css/Toast.min.css">
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
@@ -30,20 +31,14 @@
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="{{ route('dashboard') }}">
-                <span class="align-middle">Koperasi <b class='text-success'>Kosgoro</b></span>
-        </a>
-
+                    <span class="align-middle">Koperasi <b class='text-success'>Kosgoro</b></span>
+                </a>
 				<ul class="sidebar-nav">
 					<li class="sidebar-header">
 						List Menu
 					</li>
 
-					<li class="sidebar-item {{ Route::currentRouteName() == 'dashboard' ? 'active' : '' }}">
-						<a class="sidebar-link" href="{{ route('dashboard') }}">
-                          <i class="align-middle" data-feather="monitor"></i> <span class="align-middle">Dashboard</span>
-                        </a>
-                    </li>
-
+                    {{--
 					<li class="sidebar-item {{ Route::currentRouteName() == 'masterdata.users' ? 'active' : '' }}">
 						<a data-bs-target="#masterdata" data-bs-toggle="collapse" class="sidebar-link">
 							<i class="align-middle" data-feather="database"></i> <span class="align-middle">Master Data</span>
@@ -59,8 +54,39 @@
 
 						</ul>
 					</li>
+                    --}}
 
-					<li class="sidebar-item">
+                    @foreach( \App\Models\MenuParent::all() as $parent )
+                        @if( $parent->name == 'Default' )
+                            @foreach( \App\Models\Privileges::where('role_id', Session::get('role_id'))->where('access', 1)->get() as $menu )
+                                @if( \App\Models\MenuParent::first()->id == \App\Models\MenuChild::where('id', $menu->menu_id)->first()->menu_parent_id )
+                                    <li class="sidebar-item {{ Route::currentRouteName() == $menu->menu->name ? 'active' : '' }}">
+                                        <a class="sidebar-link" href="{{ route($menu->menu->route) }}">
+                                            <i class="align-middle" data-feather="monitor"></i> <span class="align-middle">{{ $menu->menu->name }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        @else
+                            @if( \App\Models\Privileges::where('role_id', Session::get('role_id'))->where('parent_id', $parent->id)->first())
+        					    <li class="sidebar-item">
+                                    <a data-bs-target="#{{ $parent->name }}" data-bs-toggle="collapse" class="sidebar-link">
+                                        <i class="align-middle" data-feather={{ $parent->icons }}></i> <span class="align-middle">{{ $parent->name }}</span>
+            						</a>
+                                    <ul id="{{ $parent->name }}" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                                        @foreach( \App\Models\Privileges::where('role_id', Session::get('role_id'))->where('access', 1)->get() as $menu)
+                                            @if( $parent->id == \App\Models\MenuChild::where('id', $menu->menu_id)->first()->menu_parent_id )
+                                                <li class="sidebar-item"><a class="sidebar-link" href="{{ route($menu->menu->route) }}">{{ $menu->menu->name }}</a></li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endif
+                        @endif
+                    @endforeach
+
+                    {{-- 
+                        <li class="sidebar-item">
 						<a data-bs-target="#products" data-bs-toggle="collapse" class="sidebar-link">
 							<i class="align-middle" data-feather="box"></i> <span class="align-middle">Products</span>
 						</a>
@@ -104,6 +130,8 @@
                             <li class="sidebar-item"><a class="sidebar-link" href="{{ route('purchase.order') }}">Laporan PR</a></li>
                         </ul>
                     </li>
+                    --}}
+
 
 					<li class="sidebar-header">
 						Entrance
@@ -138,131 +166,34 @@
 							<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 								<div class="position-relative">
 									<i class="align-middle" data-feather="bell"></i>
-									<span class="indicator">4</span>
+                                    @if( $notif->count() != 0 )
+                                        <span class="indicator">{{ $notif->count() }}</span>
+                                    @endif
 								</div>
 							</a>
 							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="alertsDropdown">
 								<div class="dropdown-menu-header">
-									4 New Notifications
+                                    Notifications
 								</div>
 								<div class="list-group">
-									<a href="#" class="list-group-item">
+                                    @foreach( $notif as $data )
+									<a class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
+                                                <i class="text-success" data-feather="{{ $data->icons }}"></i>
 											</div>
 											<div class="col-10">
-												<div class="text-dark">Update completed</div>
-												<div class="text-muted small mt-1">Restart server 12 to complete the update.</div>
-												<div class="text-muted small mt-1">30m ago</div>
+                                                <div class="text-dark">{{ $data->title }}</div>
+                                                <div class="text-muted small mt-1">{{ $data->body }}</div>
+                                                <div class="text-muted small mt-1">{{ $data->created_at }}</div>
 											</div>
 										</div>
 									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-warning" data-feather="bell"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark">Lorem ipsum</div>
-												<div class="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
-												<div class="text-muted small mt-1">2h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-primary" data-feather="home"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark">Login from 192.186.1.8</div>
-												<div class="text-muted small mt-1">5h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-success" data-feather="user-plus"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark">New connection</div>
-												<div class="text-muted small mt-1">Christina accepted your request.</div>
-												<div class="text-muted small mt-1">14h ago</div>
-											</div>
-										</div>
-									</a>
+                                    @endforeach
+
 								</div>
 								<div class="dropdown-menu-footer">
 									<a href="#" class="text-muted">Show all notifications</a>
-								</div>
-							</div>
-						</li>
-						<li class="nav-item dropdown">
-							<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
-								<div class="position-relative">
-									<i class="align-middle" data-feather="message-square"></i>
-								</div>
-							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
-								<div class="dropdown-menu-header">
-									<div class="position-relative">
-										4 New Messages
-									</div>
-								</div>
-								<div class="list-group">
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
-											</div>
-											<div class="col-10 ps-2">
-												<div class="text-dark">Vanessa Tucker</div>
-												<div class="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
-												<div class="text-muted small mt-1">15m ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
-											</div>
-											<div class="col-10 ps-2">
-												<div class="text-dark">William Harris</div>
-												<div class="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
-												<div class="text-muted small mt-1">2h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
-											</div>
-											<div class="col-10 ps-2">
-												<div class="text-dark">Christina Mason</div>
-												<div class="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
-												<div class="text-muted small mt-1">4h ago</div>
-											</div>
-										</div>
-									</a>
-									<a href="#" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
-											</div>
-											<div class="col-10 ps-2">
-												<div class="text-dark">Sharon Lessman</div>
-												<div class="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
-												<div class="text-muted small mt-1">5h ago</div>
-											</div>
-										</div>
-									</a>
-								</div>
-								<div class="dropdown-menu-footer">
-									<a href="#" class="text-muted">Show all messages</a>
 								</div>
 							</div>
 						</li>
@@ -296,9 +227,36 @@
 </body>
 
 	<script src="https://demo.adminkit.io/js/app.js"></script>
+    <script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"/>
     <script src="{{ url('/assets/js/jquery.min.js') }}"></script>
     <script src="{{ url('/assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/assets/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ url('/assets/js/toastr.min.js') }}"></script>
+    <script>
+        if("{{ session('Success') }}"){
+            setTimeout(function () {
+                toastr.options = {
+                    "positionClass": "toast-top-right",
+                    "closeButton": true,
+                    "progressBar": true,
+                    "showEasing": "swing",
+                    "timeOut": "6000"
+                };
+                toastr.success("<strong>Success</strong> <br/><small>{{ session('Success') }}</small>");
+            }, 1600)
+        }else if("{{ session('Error') }}"){
+            setTimeout(function () {
+                toastr.options = {
+                    "positionClass": "toast-top-right",
+                    "closeButton": true,
+                    "progressBar": true,
+                    "showEasing": "swing",
+                    "timeOut": "6000"
+                };
+                toastr.error("<strong>Errors</strong> <br/><small>{{ session('Error') }}</small>");
+            }, 1600)
+        }
+    </script>
 
     @yield('js')
 

@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductsPurchase extends Model
+class LaporanPR extends Model
 {
     use HasFactory;
-    protected $table = 'products_purchase';
+    protected $table = 'laporan_pr';
+    public $timestamps = true;
     protected $fillable = [
+        'name',
         'rack_id',
-        'status'
+        'supplyer',
+        'total_price',
     ];
 
     public function rack(){

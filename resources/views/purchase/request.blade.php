@@ -33,7 +33,7 @@
                                     <td>{{ $data->status }}</td>
                                     <td>
                                         <a href="{{ route('purchase.request.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
-                                        <a href="" class='btn btn-success btn-sm'>Checkout</a>
+                                        <a href="{{ route('purchase.request.order', $data->rack_id) }}" class='btn btn-success btn-sm'>Checkout</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -42,6 +42,7 @@
                 </div>
             </div>
         </div>
+
         <div class='modal fade' id='add' tabindex='-1' role='dialog' aria-labelledby='addLabel' aria-hidden='true'>
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

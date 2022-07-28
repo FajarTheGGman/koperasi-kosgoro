@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\Users;
 use App\Models\Roles;
+use App\Models\Notification;
 
 class RolesController extends Controller
 {
@@ -27,6 +28,11 @@ class RolesController extends Controller
                     Roles::insert([
                         'name' => $user->name,
                         'description' => $user->desc
+                    ]);
+                    Notification::insert([
+                        'title' => 'New Roles',
+                        'body' => 'Role baru : '.$user->name.' telah ditambahkan',
+                        'icons' => 'chevrons-up'
                     ]);
                     return back()->with('Success', 'Role has been added');
                 }else{

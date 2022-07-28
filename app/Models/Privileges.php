@@ -15,7 +15,7 @@ class Privileges extends Model
         return $this->belongsTo('App\Models\Roles', 'role_id');
     }
 
-    public function menu_id(){
-        return $this->belongsTo('App\Models\Menu', 'menu_id');
+    public function menu(){
+        return $this->belongsTo('App\Models\MenuChild', 'menu_id');
     }
 }

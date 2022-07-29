@@ -12,6 +12,8 @@ use App\Models\Rack;
 use App\Models\PurchaseRequest;
 use App\Models\Enumeration;
 use App\Models\ProductsPurchase;
+use App\Models\Cart;
+use App\Models\Users;
 
 class ProductsController extends Controller
 {
@@ -58,6 +60,25 @@ class ProductsController extends Controller
     public function warehouse_delete($id){
         ProductsPurchase::where('id', $id)->delete();
         return back()->with('Success', 'Product has been deleted');
+    }
+
+    public function store(){
+        $supplier = Supplier::all();
+        $products = ProductsPurchase::with('rack')->where('status', 'Sold')->get();
+        return view('products.store', [
+            'products' => $products,
+            'supplier' => $supplier
+        ]);
+    }
+
+    public function cart(Request $user){
+        $supplier = Supplier::all();
+        $users = Users::where('email', $user->session()->get('email'))->first();
+        $products = Cart::with('rack')->where('user_id', $users)->get();
+        return view('products.cart', [
+            'products' => $products,
+            'supplier' => $supplier
+        ]);
     }
 
     public function add(Request $user){

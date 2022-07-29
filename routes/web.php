@@ -99,6 +99,9 @@ Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function
     Route::post('/add', [ProductsController::class, 'add'])->name('products.create');
     Route::get('/request', [ProductsController::class, 'purchase_request'])->name('products.purchase_request');
     Route::get('/checkout', [ProductsController::class, 'purchase_order'])->name('products.checkout');
+
+    Route::get('/store', [ProductsController::class, 'store'])->name('products.store');
+    Route::get('/cart', [ProductsController::class, 'cart'])->name('products.cart');
 });
 
 // rack route

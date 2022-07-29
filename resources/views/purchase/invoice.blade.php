@@ -1,29 +1,12 @@
 @extends('.template.app')
 
 @section('content')
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0"> </h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">Home</a></li>
-              <li class="breadcrumb-item">Purchase</a></li>
-              <li class="breadcrumb-item active"><a href="{{ route('purchase.invoice') }}">Invoice</a></li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-
-        <div class='card'>
-            <div class='card-header'>
-                <h4><b>Invoice Products</b></h4>
-            </div>
-
-            <div class='card-body'>
+	<main class="content">
+	    <div class="container-fluid p-0">
+            <h1 class="h3 mb-3"><strong>Invoice</strong> Products</h1>
+            <div class='card'>
+  
+                <div class='card-body'>
                 <div>
                     <h3 class='text-success'><b>Koperasi Kosgoro</b></h3>
                 </div>
@@ -79,8 +62,5 @@
                 <button class='btn btn-success'><b>Selesaikan Pembayaran</b></button>
             </div>
         </div>
-      </div>
-    </div>
-  </div>
- 
+    </main>
 @endsection

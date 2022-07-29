@@ -31,19 +31,19 @@
                                             {{ $data->name }}
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="modify[]" value="{{ $data->id }}" checked>
+                                            <input type="checkbox" name="modify[]" value="{{ $data->id }}">
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="access[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->access == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="access[]" value="1">
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="write[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->write == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="write[]" value="1" >
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="update[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->update == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="update[]" value="1">
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="delete[]" value="1" {{ \App\Models\Privileges::where('menu_id', $data->id)->first()->delete == 1 ? 'checked' : '' }}>
+                                            <input type="checkbox" name="delete[]" value="1">
                                         </td>
                                     </tr>
                                 @endforeach

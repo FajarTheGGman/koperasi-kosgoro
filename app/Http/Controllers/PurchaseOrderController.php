@@ -20,9 +20,18 @@ class PurchaseOrderController extends Controller
         $purchase_order = PurchaseOrder::with('purchase_request')->where('id', $id)->first();
         $product_purchase = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
         foreach($product_purchase as $product){
-            ProductsPurchase::where('id', $product->id)->update([
-                'status' => 'Sold'
-            ]);
+            $check = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
+            if($check){
+                foreach($check as $check_product){
+                    $check_product->quantity += $product->quantity;
+                    $check_product->price += $product->price;
+                    $check_product->save();
+                }
+            }else{
+                ProductsPurchase::where('id', $product->id)->update([
+                    'status' => 'Sold'
+                ]);
+            }
         }
         PurchaseRequest::where('rack_id', $purchase_order->purchase_request->rack_id)->delete();
         PurchaseOrder::where('id', $id)->update([

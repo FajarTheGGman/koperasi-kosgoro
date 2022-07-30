@@ -20,7 +20,7 @@
                                 <th>Image</th>
                                 <th>Barcode</th>
                                 <th>Sell Price</th>
-                                <th>Delete</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -39,6 +39,7 @@
                                     </td>
                                     <td>{{ $data->sell_price }}</td>
                                     <td>
+                                        <a href="{{ route('products.edit', $data->id) }}" class='btn btn-primary btn-sm'><i data-feather="edit"></i> Edit</a>
                                         <a href="{{ route('products.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                     </td>
                                 </tr>

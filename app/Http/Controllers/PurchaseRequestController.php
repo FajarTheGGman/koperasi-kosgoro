@@ -47,7 +47,7 @@ class PurchaseRequestController extends Controller
                     'total_income' => $product->total_income,
                     'status' => 'Process',
                 ]);
-                $total += $product->price;
+                $total = $product->price++;
             }
             PurchaseRequest::insert([
                 'name' => $user->name,
@@ -69,7 +69,7 @@ class PurchaseRequestController extends Controller
     }
 
     public function purchase_order($id){
-                $pr = LaporanPR::where('rack_id', $id)->first();
+                $pr = LaporanPR::where('rack_id', $id)->orderBy('id', 'DESC')->first();
                 PurchaseOrder::insert([
                     'name' => $pr->name,
                     'supplyer' => $pr->supplyer,

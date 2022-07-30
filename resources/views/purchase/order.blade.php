@@ -25,7 +25,13 @@
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->supplyer }}</td>
                                     <td>{{ $data->total_price }}</td>
-                                    <td>{{ $data->status }}</td>
+                                    <td>
+                                        @if( $data->status == 'Process' )
+                                            <b class='text text-warning'>{{ $data->status }}</b>
+                                        @else
+                                            <b class='text text-success'>{{ $data->status }}</b>
+                                        @endif
+                                    </td>
                                     <td>
                                         <a href="{{ route('purchase.order.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                         <a href="{{ route('purchase.order.approve', $data->id) }}" class='btn btn-success btn-sm'>Approve</a>

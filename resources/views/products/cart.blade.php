@@ -6,7 +6,8 @@
             <h1 class="h3 mb-3"><strong>Products</strong> Cart</h1>
             <div class='card'>
                 <div class='card-body'>
-                    <form>
+                    <form action={{ route('products.invoice') }} method="POST">
+                    @csrf
                     <table class='table table-stripped' id='data'>
                         <thead>
                             <tr>
@@ -41,10 +42,10 @@
                                         <input type="text" name="price[]" value="{{ $data->price }}" class="form-control" readonly>
                                     </td>
                                     <td>
-                                        <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ $data->quantity }}">
+                                        <input type="number" name="quantity[]" class="form-control" value="1" min="1" max={{ \App\Models\ProductsPurchase::where('name', $data->name)->first()->quantity }}>
                                     </td>
                                     <td>
-                                        <a class='btn btn-danger btn-sm'><i data-feather='minus-circle'></i> Remove</a>
+                                        <a href="{{ route('products.cart.delete', $data->id) }}" class='btn btn-danger btn-sm'><i data-feather='minus-circle'></i> Remove</a>
                                     </td>
                                 </tr>
                             @endforeach

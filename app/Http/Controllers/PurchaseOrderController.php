@@ -18,18 +18,23 @@ class PurchaseOrderController extends Controller
 
     public function approve($id){
         $purchase_order = PurchaseOrder::with('purchase_request')->where('id', $id)->first();
-        $product_purchase = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
-        foreach($product_purchase as $product){
-            $check = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
-            if($check){
+        $product_purchase = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->where('status', 'Process')->get();
+        $getall = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->get();
+        foreach($product_purchase as $key => $product){
+            $check = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->where('name', $product->name)->where('status', 'Sold')->get();
+            $x = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->where('name', $product->name)->where('status', 'Process')->get();
+            $y = ProductsPurchase::where('rack_id', $purchase_order->purchase_request->rack_id)->where('name', $product->name)->where('status', 'Sold')->get();
+            if($check->count() > 0){
                 foreach($check as $check_product){
-                    $check_product->quantity += $product->quantity;
-                    $check_product->price += $product->price;
-                    $check_product->save();
+                    if($product->name == $check_product->name){
+                        $check_product->quantity += $product->quantity;
+                        $check_product->save();
+                        ProductsPurchase::find($product->id)->delete();
+                    }
                 }
             }else{
-                ProductsPurchase::where('id', $product->id)->update([
-                    'status' => 'Sold'
+                ProductsPurchase::find($product->id)->update([
+                    'status' => 'Sold',
                 ]);
             }
         }

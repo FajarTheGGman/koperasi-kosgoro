@@ -14,7 +14,7 @@ class Invoice extends Model
         return $this->belongsTo('App\Models\User', 'user_id');
     }
 
-    public function purchase_request(){
-        return $this->belongsTo('App\Models\PurchaseRequest', 'pr_id');
+    public function cart(){
+        return $this->belongsTo('App\Models\Cart', 'cart_id');
     }
 }

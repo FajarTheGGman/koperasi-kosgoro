@@ -12,9 +12,9 @@
                 </div>
                 <div class='row mt-3'>
                     <div class='col'>
-                        <p><b>Pembeli</b> &nbsp&nbsp&nbsp&nbsp testing<br>
-                           <b>Nomor Invoice</b> &nbsp&nbsp&nbsp&nbsp 123123<br>
-                           <b>Tanggal</b> &nbsp&nbsp&nbsp&nbsp 12-12-12
+                        <p><b>Pembeli</b> &nbsp&nbsp&nbsp&nbsp {{ $products[0]->users->fullname }}<br>
+                            <b>Nomor Invoice</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice[0]->nomor_invoice }}<br>
+                            <b>Tanggal</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice[0]->tanggal_pembelian }}
                         </p>
                     </div>
 
@@ -40,24 +40,19 @@
                     </thead>
 
                     <tbody>
-                        <tr class='text-dark'>
-                            <td>1</td>
-                            <td>Koperasi Kosgoro</td>
-                            <td>Rp. 1.000.000</td>
-                            <td>1</td>
-                            <td>Rp. 1.000.000</td>
-                        </tr>
-                        <tr class='bg-gray'>
-                            <td>2</td>
-                            <td>Koperasi Kosgoro</td>
-                            <td>Rp. 1.000.000</td>
-                            <td>1</td>
-                            <td>Rp. 1.000.000</td>
-                        </tr>
+                        @foreach( $products as $data )
+                            <tr class='text-dark'>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $data->name }}</td>
+                                <td>{{ $data->sell_price }}</td>
+                                <td>{{ $data->quantity }}</td>
+                                <td>{{ $data->sell_price * $data->quantity }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
                 <div class='col mt-2 text-right'>
-                    <h5 class='text-success'><b>Subtotal</b> : (Rp. 123) &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</h5>
+                    <h5 class='text-success'><b>Subtotal</b> : (Rp.{{ $invoice[0]->total }})  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</h5>
                 </div>
                 <button class='btn btn-success'><b>Selesaikan Pembayaran</b></button>
             </div>

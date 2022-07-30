@@ -14,9 +14,4 @@ class Cart extends Model
     {
         return $this->belongsTo('App\Models\Users', 'user_id');
     }
-
-    public function rack()
-    {
-        return $this->belongsTo('App\Models\Rack', 'rack_id');
-    }
 }

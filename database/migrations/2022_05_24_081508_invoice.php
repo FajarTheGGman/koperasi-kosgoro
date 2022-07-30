@@ -17,8 +17,6 @@ class Invoice extends Migration
             $table->bigIncrements('id');
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreignId('pr_id');
-            $table->foreign('pr_id')->references('id')->on('laporan_pr');
             $table->string('nomor_invoice');
             $table->string('tanggal_pembelian');
             $table->string('nama_barang');

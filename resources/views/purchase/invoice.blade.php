@@ -2,6 +2,8 @@
 
 @section('content')
 	<main class="content">
+        <form action={{ route('products.invoice.payment') }} method="POST">
+        @csrf
 	    <div class="container-fluid p-0">
             <h1 class="h3 mb-3"><strong>Invoice</strong> Products</h1>
             <div class='card'>
@@ -20,7 +22,7 @@
 
                     <div class='col text-right'>
                         <p><b>Metode Pembayaran : </b>
-                            <select>
+                            <select name='payment'>
                                 <option class='text-success'>Cash<span class='fas fa-dollar-sign'></span></option>
                                 <option class='text-warning'>Potong Gaji</option>
                             </select>
@@ -57,5 +59,6 @@
                 <button class='btn btn-success'><b>Selesaikan Pembayaran</b></button>
             </div>
         </div>
+        </form>
     </main>
 @endsection

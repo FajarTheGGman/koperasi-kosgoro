@@ -151,6 +151,16 @@ class ProductsController extends Controller
         ]);
     }
 
+    public function update_invoice(Request $user){
+            $users = Users::where('email', Session::get('email'))->first();
+            Invoice::where('user_id', $users->id)->update([
+                'payment' => $user->payment,
+                'status_pembayaran' => 'Paid',
+                'tanggal_pembayaran' => date('Y-m-d:H:i:s'),
+            ]);
+            return redirect()->route('products.cart')->with('Success', 'Payment has been success');
+    }
+
     public function add(Request $user){
         try{
             if(!empty($user->file('image'))){

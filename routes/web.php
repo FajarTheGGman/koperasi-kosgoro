@@ -14,6 +14,7 @@ use App\Http\Controllers\RackController;
 use App\Http\Controllers\EnumerationController;
 use App\Http\Controllers\AclController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\LaporanController;
 
 use App\Models\Products;
 use App\Models\Supplier;
@@ -88,6 +89,8 @@ Route::group(['prefix' => 'purchase', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'delete'])->name('purchase.order.delete');
     Route::get('/order/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('purchase.order.approve');
     Route::get('/order/invoice', [PurchaseOrderController::class, 'invoice'])->name('purchase.invoice');
+
+    Route::get('/laporan/invoice', [LaporanController::class, 'index'])->name('purchase.laporan.invoice');
 });
 
 Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function(){
@@ -107,6 +110,7 @@ Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/cart/delete/{id}', [ProductsController::class, 'delete_cart'])->name('products.cart.delete');
 
     Route::post('/invoice', [ProductsController::class, 'new_invoice'])->name('products.invoice');
+    Route::post('/invoice/payment', [ProductsController::class, 'update_invoice'])->name('products.invoice.payment');
 });
 
 // rack route

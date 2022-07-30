@@ -9,6 +9,7 @@ class Invoice extends Model
 {
     use HasFactory;
     protected $table = 'invoice';
+    public $timestamps = false;
 
     public function users(){
         return $this->belongsTo('App\Models\User', 'user_id');

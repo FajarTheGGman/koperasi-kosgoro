@@ -9,12 +9,17 @@ class Invoice extends Model
 {
     use HasFactory;
     protected $table = 'invoice';
+    public $timestamps = false;
 
     public function users(){
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo('App\Models\Users', 'user_id');
     }
 
-    public function purchase_request(){
-        return $this->belongsTo('App\Models\PurchaseRequest', 'pr_id');
+    public function cart(){
+        return $this->belongsTo('App\Models\Cart', 'cart_id');
+    }
+
+    public function products(){
+        return $this->belongsTo('App\Models\InvoiceProduct', 'product_id');
     }
 }

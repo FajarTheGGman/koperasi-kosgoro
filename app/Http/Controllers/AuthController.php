@@ -13,6 +13,8 @@ use App\Models\PurchaseRequest;
 use App\Models\PurchaseOrder;
 use App\Models\Privileges;
 use App\Models\MenuParent;
+use App\Models\Invoice;
+use App\Models\ProductsPurchase;
 
 class AuthController extends Controller
 {
@@ -43,6 +45,10 @@ class AuthController extends Controller
     public function dashboard(Request $user){
         $privileges = Privileges::with('roles', 'menu')->where('role_id', $user->session()->get('role_id'))->get();
         $menu_parent = MenuParent::all();
+        $earnings = Invoice::where('status_pembayaran', 'Paid')->sum('total');
+        $invoice = Invoice::take(10)->get();
+        $purchase_order = PurchaseOrder::take(10)->get();
+        $warehouse = ProductsPurchase::all();
 
         return view('index', [
             'products' => Products::all(),
@@ -52,7 +58,10 @@ class AuthController extends Controller
             'users' => Users::all(),
             'roles' => Roles::all(),
             'privileges' => $privileges,
-            'menu_parent' => $menu_parent
+            'menu_parent' => $menu_parent,
+            'earnings' => $earnings,
+            'invoice' => $invoice,
+            'warehouse' => $warehouse
         ]);
     }
 

@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{ url('/assets/css/bootstrap.min.css') }}"/>
     <link rel="stylesheet" href="{{ url('/assets/css/dataTables.bootstrap5.min.css') }}"/>
     <link rel="stylesheet" href="{{ url('/assets/css/toastr.min.css') }}"/>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<link rel="stylesheet" href="https://ireade.github.io/Toast.js/css/Toast.min.css">
 
@@ -163,6 +162,17 @@
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
 						<li class="nav-item dropdown">
+							<a class="nav-icon" href="{{ route('products.cart') }}" id="alertsDropdown">
+								<div class="position-relative">
+									<i class="align-middle" data-feather="shopping-cart"></i>
+                                    @if( $cart != 0 )
+                                        <span class="indicator">{{ $cart }}</span>
+                                    @endif
+								</div>
+							</a>
+    					</li>
+
+						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
 								<div class="position-relative">
 									<i class="align-middle" data-feather="bell"></i>
@@ -232,6 +242,9 @@
     <script src="{{ url('/assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ url('/assets/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ url('/assets/js/toastr.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script>
         if("{{ session('Success') }}"){
             setTimeout(function () {

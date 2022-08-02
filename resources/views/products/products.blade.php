@@ -52,7 +52,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable();
+            $('#data').DataTable({
+                responsive: true
+            });
         });
     </script>
 @endsection

@@ -64,8 +64,8 @@
                                         <td>{{ $data->menu_parent->name }}</td>
                                         <td>{{ $data->description }}</td>
                                         <td>
-                                            <a href="{{ route('masterdata.menu.child.edit', $data->id) }}" class='btn btn-warning'>Edit</a>
-                                            <a href="{{ route('masterdata.menu.child.delete', $data->id) }}" class='btn btn-danger'>Delete</a>
+                                            <a href="{{ route('masterdata.menu.child.edit', $data->id) }}" class='btn btn-warning btn-sm'>Edit</a>
+                                            <a href="{{ route('masterdata.menu.child.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -158,8 +158,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#data").DataTable()
-            $("#data2").DataTable()
+            $("#data").DataTable({
+                responsive: true
+            });
+            $("#data2").DataTable({
+                responsive: true
+            });
         })
     </script>
 @endsection

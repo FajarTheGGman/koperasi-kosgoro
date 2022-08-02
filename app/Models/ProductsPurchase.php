@@ -17,4 +17,8 @@ class ProductsPurchase extends Model
     public function rack(){
         return $this->belongsTo('App\Models\Rack', 'rack_id');
     }
+
+    public function purchase_request(){
+        return $this->belongsTo('App\Models\LaporanPR', 'pr_id');
+    }
 }

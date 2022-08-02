@@ -30,14 +30,19 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->quantity }}</td>
-                                    <td>{{ $data->price }}</td>
+                                    <td>Rp.{{ $data->price }}</td>
                                     <td>{{ $data->type }}</td>
                                     <td>
-                                        <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px">
+                                        @if( $data->image == 'default.png' )
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px">
+                                        @else
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="150px">
+                                        @endif
                                     </td>
                                     <td>
+                                        {!! DNS2D::getBarcodeHTML("Tidak ada informasi", 'QRCODE', 4,4) !!}
                                     </td>
-                                    <td>{{ $data->sell_price }}</td>
+                                    <td>Rp.{{ $data->sell_price }}</td>
                                     <td>
                                         <a href="{{ route('products.edit', $data->id) }}" class='btn btn-primary btn-sm'><i data-feather="edit"></i> Edit</a>
                                         <a href="{{ route('products.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
@@ -106,9 +111,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable();
-
-            // format #price with currency
+            $('#data').DataTable({
+                responsive: true
+            });
         });
     </script>
 @endsection

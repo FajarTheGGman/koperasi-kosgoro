@@ -6,16 +6,17 @@
             <h1 class="h3 mb-3"><strong>Laporan</strong> Transaksi</h1>
             <div class='card'>
                 <div class='card-body'>
-                    <table class='table table-responsive-sm' id="data">
+                    <table class='table dataTable' id="data">
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Pembeli</th>
                                 <th>Nomor Invoice</th>
                                 <th>Status Pembayaran</th>
                                 <th>Payment Type</th>
                                 <th>Total Transaksi</th>
                                 <th>Tanggal Transaksi</th>
-                                <th>Actions</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -23,13 +24,21 @@
                             @foreach( $invoice as $data )
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $data->users->fullname }}</td>
                                     <td>{{ $data->nomor_invoice }}</td>
-                                    <td>{{ $data->status_pembayaran }}</td>
+                                    <td>
+                                        @if( $data->status_pembayaran == 'Paid' )
+                                            <span class="badge bg-success badge-md">Paid</span>
+                                        @else
+                                            <span class='badge bg-danger'>{{ $data->status_pembayaran }}</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $data->payment }}</td>
                                     <td>{{ $data->total }}</td>
                                     <td>{{ $data->tanggal_pembayaran }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-success"><i data-feather=""></i>Detail</a>
+                                        <a href="{{ route('products.invoice.detail', $data->id) }}" class='btn btn-sm btn-primary btn-sm'><span data-feather="eye"></span> Details</a>
+                                        <a href="{{ route('products.invoice.delete', $data->id) }}" class='btn btn-danger btn-sm ml-4 mt-2'><span data-feather='trash'></span> Delete</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -44,7 +53,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#data").DataTable();
+            $("#data").DataTable({
+                responsive: true
+            });
         })
     </script>
 @endsection

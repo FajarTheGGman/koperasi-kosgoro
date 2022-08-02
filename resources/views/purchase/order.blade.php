@@ -14,6 +14,7 @@
                                 <th>Supplyer</th>
                                 <th>Total Price</th>
                                 <th>Status</th>
+                                <th>Purchase Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -24,17 +25,21 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->supplyer }}</td>
-                                    <td>{{ $data->total_price }}</td>
+                                    <td>Rp.{{ $data->total_price }}</td>
                                     <td>
                                         @if( $data->status == 'Process' )
                                             <b class='text text-warning'>{{ $data->status }}</b>
-                                        @else
+                                        @elseif( $data->status == 'Declined' )
+                                            <b class='text text-danger'>{{ $data->status }}</b>
+                                        @elseif( $data->status == 'Approved' )
                                             <b class='text text-success'>{{ $data->status }}</b>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('purchase.order.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
-                                        <a href="{{ route('purchase.order.approve', $data->id) }}" class='btn btn-success btn-sm'>Approve</a>
+                                        {{ $data->created_at }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('purchase.order.details', ['id' => $data->id, 'pr_id' => $data->pr_id]) }}" class='btn btn-primary btn-sm'><i data-feather='eye'></i> Details</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -49,7 +54,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable();
+            $('#data').DataTable({
+                responsive: true
+            });
         });
     </script>
 @endsection

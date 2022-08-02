@@ -8,14 +8,13 @@
                 <div class='card-body'>
                     <form action={{ route('products.invoice') }} method="POST">
                     @csrf
-                    <table class='table table-stripped' id='data'>
+                    <table class='table table-stripped table-responsive display nowrap' id='data'>
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Image</th>
-                                <th>Barcode</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Action</th>
@@ -27,19 +26,22 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
+                                        <input type="hidden" name="id[]" value="{{ $data->id }}">
+
                                         <input type="text" name="name[]" value="{{ $data->name }}" class="form-control" readonly>
                                     </td>
                                     <td>
                                         <input type="text" name="type[]" value="{{ $data->type }}" class="form-control" readonly>
                                     </td>
                                     <td>
-                                        <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px"> 
+                                        @if( $data->image == 'default.png' )
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px">
+                                        @else
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="150px">
+                                        @endif
                                     </td>
                                     <td>
-                                        <input type="text" name="barcode[]" value="{{ $data->barcode }}" class="form-control" readonly>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="price[]" value="{{ $data->price }}" class="form-control" readonly>
+                                        <input type="text" name="price[]" value="{{ $data->sell_price }}" class="form-control" readonly>
                                     </td>
                                     <td>
                                         <input type="number" name="quantity[]" class="form-control" value="1" min="1" max={{ \App\Models\ProductsPurchase::where('name', $data->name)->first()->quantity }}>
@@ -62,7 +64,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#data").DataTable()
+            $("#data").DataTable({
+                responsive: true
+            })
         })
     </script>
 @endsection

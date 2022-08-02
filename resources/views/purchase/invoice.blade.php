@@ -15,17 +15,23 @@
                 <div class='row mt-3'>
                     <div class='col'>
                         <p><b>Pembeli</b> &nbsp&nbsp&nbsp&nbsp {{ $products[0]->users->fullname }}<br>
-                            <b>Nomor Invoice</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice[0]->nomor_invoice }}<br>
-                            <b>Tanggal</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice[0]->tanggal_pembelian }}
+                            <b>Nomor Invoice</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice->nomor_invoice }}<br>
+                            <b>Tanggal</b> &nbsp&nbsp&nbsp&nbsp {{ $invoice->tanggal_pembayaran }}
                         </p>
                     </div>
 
+                    <input type="hidden" name="id" value="{{ $invoice->id }}">
+
                     <div class='col text-right'>
                         <p><b>Metode Pembayaran : </b>
-                            <select name='payment'>
-                                <option class='text-success'>Cash<span class='fas fa-dollar-sign'></span></option>
-                                <option class='text-warning'>Potong Gaji</option>
-                            </select>
+                            @if( $type == 'payment' )
+                                <select name='payment'>
+                                    <option class='text-success'>Cash<span class='fas fa-dollar-sign'></span></option>
+                                    <option class='text-warning'>Potong Gaji</option>
+                                </select>
+                            @else
+                                <b class='text text-success'>{{ $invoice->payment }}</b>
+                            @endif
                         </p>
                     </div>
                 </div>
@@ -46,17 +52,21 @@
                             <tr class='text-dark'>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $data->name }}</td>
-                                <td>{{ $data->sell_price }}</td>
+                                <td>Rp.{{ $data->sell_price }}</td>
                                 <td>{{ $data->quantity }}</td>
-                                <td>{{ $data->sell_price * $data->quantity }}</td>
+                                <td>Rp.{{ $data->sell_price * $data->quantity }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
                 <div class='col mt-2 text-right'>
-                    <h5 class='text-success'><b>Subtotal</b> : (Rp.{{ $invoice[0]->total }})  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</h5>
+                    <h5 class='text-success'><b>Subtotal</b> : (Rp.{{ $invoice->total }})  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</h5>
                 </div>
-                <button class='btn btn-success'><b>Selesaikan Pembayaran</b></button>
+                @if( $type == 'payment' )
+                    <button class='btn btn-success'><b>Selesaikan Pembayaran</b></button>
+                @elseif( $type == 'view' )
+                    <a href="{{ route('purchase.laporan.invoice') }}" class='btn btn-success'><i data-feather='arrow-left'></i> Kembali</a>
+                @endif
             </div>
         </div>
         </form>

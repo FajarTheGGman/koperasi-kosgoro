@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\PurchaseOrder;
 use App\Models\ProductsPurchase;
 use App\Models\PurchaseRequest;
+use App\Models\LaporanPR;
 
 class PurchaseOrderController extends Controller
 {
@@ -38,11 +39,41 @@ class PurchaseOrderController extends Controller
                 ]);
             }
         }
-        PurchaseRequest::where('rack_id', $purchase_order->purchase_request->rack_id)->delete();
+        PurchaseRequest::where('rack_id', $purchase_order->purchase_request->rack_id)->orderBy('id', 'DESC')->delete();
         PurchaseOrder::where('id', $id)->update([
             'status' => 'Approved'
         ]);
+        $get = PurchaseOrder::where('id', $id)->first();
+        LaporanPR::where('id', $get->pr_id)->update([
+            'status' => 'Approved'
+        ]);
         return back()->with('Success', 'Data berhasil di approve');
+    }
+
+    public function decline($id, $pr_id){
+        $purchase_order = PurchaseOrder::with('purchase_request')->where('id', $id)->first();
+        PurchaseOrder::where('id', $id)->update([
+            'status' => 'Declined'
+        ]);
+        LaporanPR::where('id', $pr_id)->update([
+            'status' => 'Declined'
+        ]);
+        ProductsPurchase::where('pr_id', $pr_id)->update([
+            'status' => 'Declined'
+        ]);
+        PurchaseRequest::where('rack_id', $purchase_order->purchase_request->rack_id)->orderBy('id', 'DESC')->delete();
+        return back()->with('Success', 'Data berhasil di decline');
+    }
+
+    public function details($id, $pr_id){
+        $products = ProductsPurchase::where('pr_id', $pr_id)->get();
+        $laporan_pr = LaporanPR::where('id', $pr_id)->first();
+        $po = PurchaseOrder::where('id', $id)->first();
+        return view('purchase.details', [
+            'products' => $products, 
+            'laporan_pr' => $laporan_pr,
+            'po' => $po
+        ]);
     }
 
     public function delete($id){

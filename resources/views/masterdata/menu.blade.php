@@ -158,8 +158,12 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $("#data").DataTable()
-            $("#data2").DataTable()
+            $("#data").DataTable({
+                responsive: true
+            });
+            $("#data2").DataTable({
+                responsive: true
+            });
         })
     </script>
 @endsection

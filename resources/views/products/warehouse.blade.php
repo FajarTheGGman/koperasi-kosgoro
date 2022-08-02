@@ -18,7 +18,6 @@
                                 <th>Barcode</th>
                                 <th>Sell Price</th>
                                 <th>Rak</th>
-                                <th>Status</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -29,14 +28,20 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->quantity }}</td>
-                                    <td>{{ $data->price }}</td>
+                                    <td>Rp.{{ $data->price }}</td>
                                     <td>{{ $data->type }}</td>
-                                    <td>{{ $data->image }}</td>
-                                    <td>{{ $data->barcode }}</td>
-                                    <td>{{ $data->sell_price }}</td>
-                                    <td>{{ $data->rack->name }}</td>
                                     <td>
-                                        <b class='text text-success'>{{ $data->status }}</b>
+                                        @if( $data->image == 'default.png' )
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="100px">
+                                        @else
+                                            <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="150px">
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {!! DNS2D::getBarcodeHTML("{{ $data->barcode }}", 'QRCODE', 3,3) !!}
+                                    </td>
+                                    <td>Rp.{{ $data->sell_price }}</td>
+                                    <td>{{ $data->rack->name }}</td>
                                     <td>
                                         <a href="{{ route('products.warehouse.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                     </td>
@@ -53,7 +58,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable();
+            $('#data').DataTable({
+                responsive: true
+            });
         });
     </script>
 @endsection

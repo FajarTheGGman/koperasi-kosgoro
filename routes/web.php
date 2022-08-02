@@ -88,7 +88,9 @@ Route::group(['prefix' => 'purchase', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/order', [PurchaseOrderController::class, 'index'])->name('purchase.order');
     Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'delete'])->name('purchase.order.delete');
     Route::get('/order/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('purchase.order.approve');
+    Route::get('/order/decline/{id}/{pr_id}', [PurchaseOrderController::class, 'decline'])->name('purchase.order.decline');
     Route::get('/order/invoice', [PurchaseOrderController::class, 'invoice'])->name('purchase.invoice');
+    Route::get('/order/details/{id}/{pr_id}', [PurchaseOrderController::class, 'details'])->name('purchase.order.details');
 
     Route::get('/laporan/invoice', [LaporanController::class, 'index'])->name('purchase.laporan.invoice');
 });
@@ -109,6 +111,8 @@ Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/cart/add/{id}', [ProductsController::class, 'add_cart'])->name('products.cart.add');
     Route::get('/cart/delete/{id}', [ProductsController::class, 'delete_cart'])->name('products.cart.delete');
 
+    Route::get('/invoice/details/{id}', [ProductsController::class, 'invoice_details'])->name('products.invoice.detail');
+    Route::get('/invoice/delete/{id}', [ProductsController::class, 'invoice_delete'])->name('products.invoice.delete');
     Route::post('/invoice', [ProductsController::class, 'new_invoice'])->name('products.invoice');
     Route::post('/invoice/payment', [ProductsController::class, 'update_invoice'])->name('products.invoice.payment');
 });

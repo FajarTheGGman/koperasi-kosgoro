@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\View;
 use App\Models\Privileges;
 use App\Models\MenuParent;
 use App\Models\Notification;
+use App\Models\Cart;
+use App\Models\Users;
 
 class Acl
 {
@@ -21,12 +23,14 @@ class Acl
     public function handle(Request $request, Closure $next)
     {
         $privileges = Privileges::with('roles', 'menu')->where('role_id', $request->session()->get('role_id'))->get();
+        $users = Users::where('email', $request->session()->get('email'))->first();
         $menu_parent = MenuParent::all();
         $notification = Notification::orderBy('id', 'desc')->paginate(5);
+        $cart = Cart::where('user_id', $users->id)->count();
         View::share('privileges', $privileges);
         View::share('menu_parent', $menu_parent);
         View::share('notif', $notification);
-
+        View::share('cart', $cart);
 
         $check_route = Privileges::with('roles', 'menu')->where('role_id', $request->session()->get('role_id'))->get();
 

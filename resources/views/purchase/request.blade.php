@@ -29,7 +29,7 @@
                                     <td>{{ $data->name }}</td>
                                     <td>{{ $data->supplyer }}</td>
                                     <td>{{ $data->rack->name }}</td>
-                                    <td>{{ $data->total_price }}</td>
+                                    <td>Rp.{{ $data->total_price }}</td>
                                     <td>
                                         @if( $data->status == 'Process' )
                                             <b class='text text-warning'>{{ $data->status }}</b>
@@ -82,7 +82,7 @@
                             </div>
 
                             <h4 class='mt-4'><b>Data Products</b></h4>
-                            <table class='table' id='datax'>
+                            <table class='table table-stripped' id='product'>
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -97,10 +97,13 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $data->name }}</td>
-                                            <td>{{ $data->quantity }}</td>
-                                            <td>{{ $data->price }}</td>
                                             <td>
-                                                <input type='checkbox' name='product_id[]' value='{{ $data->id }}'>
+                                                <input type='number' name='quantity[]' class='form-control' value='1'>
+                                            </td>
+                                            <td>Rp.{{ $data->price }}</td>
+                                            <td>
+                                                <input type='hidden' name='product_id[]' value='{{ $data->id }}'>
+                                                <input type="checkbox" name='product[]' value='{{ $loop->index }}'>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -121,8 +124,11 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable();
-            $('#datax').DataTable();
+            $('#data').DataTable({
+                responsive: true
+            });
+            $('#product').DataTable({
+            });
         });
     </script>
 @endsection

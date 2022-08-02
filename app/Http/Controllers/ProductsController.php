@@ -15,6 +15,8 @@ use App\Models\ProductsPurchase;
 use App\Models\Cart;
 use App\Models\Users;
 use App\Models\Invoice;
+use App\Models\InvoiceProduct;
+use App\Models\Notification as Notif;
 
 class ProductsController extends Controller
 {
@@ -41,7 +43,7 @@ class ProductsController extends Controller
                 'type' => $user->type,
                 'supplier_id' => $user->supplier,
                 'sell_price' => $user->sell_price,
-                'image' => 'default.png',
+                'image' => $image_name,
             ]);
             return back()->with('Success', 'Product has been added');
         }else{
@@ -63,12 +65,14 @@ class ProductsController extends Controller
         return back()->with('Success', 'Product has been deleted');
     }
 
-    public function store(){
+    public function store(Request $user){
         $supplier = Supplier::all();
         $products = ProductsPurchase::with('rack')->where('status', 'Sold')->get();
+        $users = Users::where('email', $user->session()->get('email'))->first();
         return view('products.store', [
             'products' => $products,
-            'supplier' => $supplier
+            'supplier' => $supplier,
+            'users' => $users,
         ]);
     }
 
@@ -118,53 +122,113 @@ class ProductsController extends Controller
 
     public function new_invoice(Request $user){
         $users = Users::where('email', $user->session()->get('email'))->first();
-        $invoice = Invoice::where('user_id', $users->id)->get();
+        $invoice = Invoice::where('user_id', $users->id);
         $products = Cart::where('user_id', $users->id)->get();
         $total_harga = 0;
         $jumlah_barang = 0;
-        foreach($products as $product){
-            $total_harga += $product->price * $product->quantity;
-            $jumlah_barang += $product->quantity;
-        }
         foreach( $user->name as $key => $value){
             $check = Cart::where('name', $value)->where('user_id', $users->id)->first();
             $productsx = ProductsPurchase::where('name', $value)->first();
             if($check){
+                if($productsx->quantity < 0 || $productsx->quantity == 0){
+                    return back()->with('Error', $productsx->name.' is out of stock');
+                }
                 $productsx->quantity = $productsx->quantity - $user->quantity[$key];
                 $productsx->save();
                 $check->quantity = $user->quantity[$key];
                 $check->save();
+                foreach( $products as $updata ){
+                    $x = (int) $user->quantity[$key];
+                    $updata->quantity = $x;
+                    $updata->save();
+                }
             }
         }
-        if($invoice->count() == 0){
-            Invoice::insert([
+
+        foreach( $products as $update ){
+            $total_harga += $update->sell_price * $update->quantity;
+            $jumlah_barang += $update->quantity;
+        }
+
+        Invoice::insert([
+            'user_id' => $users->id,
+            'nomor_invoice' => 'PEMBELIAN-'.$users->id.'-'.date('Ymd:His'),
+            'tanggal_pembayaran' => date('Y-m-d:H:i:s'),
+            'jumlah' => $jumlah_barang,
+            'total' => $total_harga,
+        ]);
+
+        foreach( $products as $new ){
+            InvoiceProduct::insert([
+                'nomor_invoice' => 'PEMBELIAN-'.$users->id.'-'.date('Ymd:His'),
+                'name' => $new->name,
+                'quantity' => $new->quantity,
+                'price' => $new->price,
+                'type' => $new->type,
+                'image' => $new->image,
+                'barcode' => $new->barcode,
+                'sell_price' => $new->sell_price,
                 'user_id' => $users->id,
-                'nomor_invoice' => 'PEMBELIAN-'.$users->id.'-'.date('Ymd'),
-                'tanggal_pembelian' => date('Y-m-d'),
-                'jumlah' => $jumlah_barang,
-                'total' => $total_harga,
+                'rack_id' => $new->rack_id,
+                'invoice_id' => $invoice->orderBy('id', 'desc')->first()->id,
             ]);
         }
         return view('purchase.invoice', [
             'products' => $products,
-            'invoice' => $invoice
+            'invoice' => $invoice->orderBy('id', 'desc')->first(),
+            'type' => 'payment'
         ]);
     }
 
     public function update_invoice(Request $user){
             $users = Users::where('email', Session::get('email'))->first();
-            Invoice::where('user_id', $users->id)->update([
+            Cart::where('user_id', $users->id)->delete();
+            Invoice::where('user_id', $users->id)->where('id', $user->id)->update([
                 'payment' => $user->payment,
                 'status_pembayaran' => 'Paid',
                 'tanggal_pembayaran' => date('Y-m-d:H:i:s'),
             ]);
+            InvoiceProduct::where('user_id', $users->id)->where('invoice_id', $user->id)->update([
+                'status_pembayaran' => 'Paid',
+            ]);
+            Notif::insert([
+                'title' => 'Transaksi Baru',
+                'body' => 'Invoice - '.Invoice::orderBy('id', 'DESC')->first()->nomor_invoice.' - Users '.Invoice::orderBy('id', 'DESC')->first()->users->fullname,
+                'icons' => 'dollar-sign',
+
+            ]);
             return redirect()->route('products.cart')->with('Success', 'Payment has been success');
+    }
+
+    public function invoice_details($id){
+        $users = Users::where('email', Session::get('email'))->first();
+        $invoice = Invoice::where('id', $id)->first();
+        $products = InvoiceProduct::where('invoice_id', $id)->get();
+        return view('purchase.invoice', [
+            'products' => $products,
+            'invoice' => $invoice,
+            'type' => 'view'
+        ]);
+    }
+
+    public function invoice_delete($id){
+        try{
+            InvoiceProduct::where('invoice_id', $id)->delete();
+            Invoice::where('id', $id)->delete();
+            return back()->with('Success', 'Invoice has been deleted');
+        }catch(\Exception $e){
+            return back()->with('Error', $e->getMessage());
+        }
     }
 
     public function add(Request $user){
         try{
-            if(!empty($user->file('image'))){
-                $user->file('image')->move('./image', $user->file('image')->getClientOriginalName());
+            if($user->hasFile('image')){
+                $image = $user->file('image');
+                $image_name = $image->getClientOriginalName();
+                $image->move(public_path().'/image/', $image_name);
+            }else{
+                $image_name = 'default.png';
             }
 
             Products::insert([
@@ -172,7 +236,7 @@ class ProductsController extends Controller
                 'quantity' => $user->quantity,
                 'price' => $user->price,
                 'type' => $user->type,
-                'image' => 'default.png',
+                'image' => $image_name,
                 'sell_price' => $user->sell_price,
                 'barcode' => 'none',
                 'expired_date' => $user->expired,

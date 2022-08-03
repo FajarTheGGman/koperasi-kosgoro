@@ -3,7 +3,7 @@
 @section('content')
 	<main class="content">
 	    <div class="container-fluid p-0">
-            <h1 class="h3 mb-3"><strong>Laporan</strong> Transaksi</h1>
+            <h1 class="h3 mb-3"><strong>Laporan</strong> Potong Gaji</h1>
             <div class='card'>
                 <div class='card-body'>
                     <table class='table dataTable' id="data">
@@ -28,19 +28,15 @@
                                     <td>{{ $data->nomor_invoice }}</td>
                                     <td>
                                         @if( $data->status_pembayaran == 'Paid' )
-                                            <span class="badge bg-success ">Paid</span>
+                                            <span class="badge bg-success badge-md">Paid</span>
                                         @else
                                             <span class='badge bg-danger'>{{ $data->status_pembayaran }}</span>
                                         @endif
                                     </td>
+                                    <td><b class='text text-warning'>{{ $data->payment }}</b></td>
                                     <td>
-                                        @if( $data->payment == 'Cash' )
-                                            <b class='text text-success'>{{ $data->payment }}</b>
-                                        @else
-                                            <b class='text text-warning'>{{ $data->payment }}</b>
-                                        @endif
+                                        <b class='text text-danger'>Rp.{{ $data->total }}</b>
                                     </td>
-                                    <td>Rp.{{ $data->total }}</td>
                                     <td>{{ $data->tanggal_pembayaran }}</td>
                                     <td>
                                         <a href="{{ route('products.invoice.detail', $data->id) }}" class='btn btn-sm btn-primary btn-sm'><span data-feather="eye"></span> Details</a>

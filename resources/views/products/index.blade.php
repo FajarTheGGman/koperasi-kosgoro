@@ -14,7 +14,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Name</th>
-                                <th>Quantity</th>
                                 <th>Price</th>
                                 <th>Type</th>
                                 <th>Image</th>
@@ -29,7 +28,6 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $data->name }}</td>
-                                    <td>{{ $data->quantity }}</td>
                                     <td>Rp.{{ $data->price }}</td>
                                     <td>{{ $data->type }}</td>
                                     <td>
@@ -68,10 +66,6 @@
                                 <div class='form-group'>
                                     <label for="name">Name</label>
                                     <input class='form-control' id='name' name='name' placeholder="Name"/>
-                                </div>
-                                <div class='form-group mt-4'>
-                                    <label for="quantity">Quantity</label>
-                                    <input type="number" class='form-control' id='quantity' name='quantity' placeholder="Quantity"/>
                                 </div>
                                 <div class='form-group mt-4'>
                                     <label for="price">Price</label>

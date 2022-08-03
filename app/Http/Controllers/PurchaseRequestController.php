@@ -73,6 +73,7 @@ class PurchaseRequestController extends Controller
                 'name' => $user->name,
                 'supplyer' => $user->supplyer,
                 'rack_id' => $user->rack_id,
+                'laporan_id' => LaporanPR::orderBy('id', 'desc')->first()->id,
                 'total_price' => $total,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -87,8 +88,8 @@ class PurchaseRequestController extends Controller
         }
     }
 
-    public function purchase_order($id){
-                $pr = LaporanPR::where('rack_id', $id)->orderBy('id', 'DESC')->first();
+    public function purchase_order($id, $pr_id){
+                $pr = LaporanPR::where('id', $pr_id)->first();
                 PurchaseOrder::insert([
                     'name' => $pr->name,
                     'supplyer' => $pr->supplyer,
@@ -98,20 +99,21 @@ class PurchaseRequestController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ]);
-                PurchaseRequest::where('rack_id', $id)->update([
+                PurchaseRequest::where('id', $id)->update([
                     'status' => 'Process'
                 ]);
-                LaporanPR::where('rack_id', $id)->update([
-                    'status' => 'Process'
+                LaporanPR::where('id', $pr_id)->update([
+                    'status' => 'Process',
+                    'nomor_pr' => 'PR/'.$pr->id.'/'.$pr->rack->name.'/'.date('Y')
                 ]);
                 return back()->with('Success', 'Purchase Order added successfully');
 
     }
 
     public function approve($id){
-        $purchase_request = PurchaseRequest::find($id);
-        $purchase_request->status = 'Approved';
-        $purchase_request->save();
+        PurchaseRequest::where('id', $id)->update([
+            'status' => 'Approved'
+        ]);
         return back();
     }
 

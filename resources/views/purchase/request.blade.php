@@ -31,15 +31,19 @@
                                     <td>{{ $data->rack->name }}</td>
                                     <td>Rp.{{ $data->total_price }}</td>
                                     <td>
-                                        @if( $data->status == 'Process' )
+                                        @if( $data->status == 'Pending' )
                                             <b class='text text-warning'>{{ $data->status }}</b>
                                         @else
                                             <b class='text text-success'>{{ $data->status }}</b>
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ route('purchase.request.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
-                                        <a href="{{ route('purchase.request.order', $data->rack_id) }}" class='btn btn-success btn-sm'>Checkout</a>
+                                        @if( $data->status == 'Pending' )
+                                            <a href="{{ route('purchase.request.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
+                                            <a href="{{ route('purchase.request.order', ['id' => $data->id, 'pr_id' => $data->laporan_id]) }}" class='btn btn-success btn-sm'>Checkout</a>
+                                        @else
+                                            <a href="#" class='btn btn-secondary btn-sm'>Waiting To Be Process</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

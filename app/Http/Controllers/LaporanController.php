@@ -13,4 +13,10 @@ class LaporanController extends Controller
         $invoice = Invoice::all();
         return view('laporan.index', compact('users', 'invoice'));
     }
+
+    public function gaji(){
+        $users = Users::all();
+        $invoice = Invoice::where('status_pembayaran', 'Paid')->where('payment', 'Potong Gaji')->get();
+        return view('laporan.gaji', compact('users', 'invoice'));
+    }
 }

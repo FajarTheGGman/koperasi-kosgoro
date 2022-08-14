@@ -48,7 +48,7 @@ class AuthController extends Controller
         $earnings = Invoice::where('status_pembayaran', 'Paid')->sum('total');
         $invoice = Invoice::take(10)->get();
         $purchase_order = PurchaseOrder::take(10)->get();
-        $warehouse = ProductsPurchase::all();
+        $warehouse = ProductsPurchase::where('status', 'Sold')->get();
 
         return view('index', [
             'products' => Products::all(),

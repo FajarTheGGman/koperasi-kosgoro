@@ -15,6 +15,7 @@
                                 <th>Type</th>
                                 <th>Barcode</th>
                                 <th>Image</th>
+                                <th>Rack</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -37,8 +38,9 @@
                                             <img src="{{ url('image/'.$data->image) }}" alt="{{ $data->name }}" width="150px" height="150px">
                                         @endif
                                         </td>
+                                        <td>{{ $data->rack->name }}</td>
                                         <td>
-                                            @if(\App\Models\Cart::where('name', $data->name)->where('user_id', $users->id)->first())
+                                            @if(\App\Models\Cart::where('name', $data->name)->where('rack_id', $data->rack_id)->where('user_id', $users->id)->first())
                                                 <a href="{{ route('products.cart') }}" class='btn btn-secondary btn-sm'>Added</a>
                                             @else
                                                 <a href="{{ route('products.cart.add', $data->id) }}" class='btn btn-primary btn-sm'>Add to Cart</a>

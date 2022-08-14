@@ -3,7 +3,7 @@
 @section('content')
 	<main class="content">
 	    <div class="container-fluid p-0">
-            <h1 class="h3 mb-3"><strong>Purchase</strong> Order</h1>
+            <h1 class="h3 mb-3"><strong>Receving</strong> Order</h1>
             <div class='card'>
                 <div class='card-body'>
                     <table class='table table-stripped' id='data'>
@@ -27,12 +27,10 @@
                                     <td>{{ $data->supplyer }}</td>
                                     <td>Rp.{{ $data->total_price }}</td>
                                     <td>
-                                        @if( $data->status == 'Process' )
+                                        @if( $data->status == 'Process' || $data->status == 'Receiving')
                                             <b class='text text-warning'>{{ $data->status }}</b>
                                         @elseif( $data->status == 'Declined' )
                                             <b class='text text-danger'>{{ $data->status }}</b>
-                                        @elseif( $data->status == 'Receiving' )
-                                            <b class='text text-warning'>{{ $data->status }}</b>
                                         @elseif( $data->status == 'Approved' )
                                             <b class='text text-success'>{{ $data->status }}</b>
                                         @endif
@@ -56,9 +54,9 @@
 @section('js')
     <script>
         $(document).ready(function(){
-            $('#data').DataTable({
+            $("#data").DataTable({
                 responsive: true
-            });
-        });
+            })
+        })
     </script>
 @endsection

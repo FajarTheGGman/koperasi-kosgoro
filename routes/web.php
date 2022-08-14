@@ -15,6 +15,7 @@ use App\Http\Controllers\EnumerationController;
 use App\Http\Controllers\AclController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\RecevingController;
 
 use App\Models\Products;
 use App\Models\Supplier;
@@ -84,15 +85,23 @@ Route::group(['prefix' => 'purchase', 'middleware' => ['Auth', 'ACL']], function
     Route::post('/request/add', [PurchaseRequestController::class, 'add'])->name('purchase.request.add');
     Route::get('/request/delete/{id}', [PurchaseRequestController::class, 'delete'])->name('purchase.request.delete');
     Route::get('/request/approve/{id}', [PurchaseRequestController::class, 'approve'])->name('purchase.request.approve');
-    Route::get('/request/order/{id}', [PurchaseRequestController::class, 'purchase_order'])->name('purchase.request.order');
+    Route::get('/request/order/{id}/{pr_id}', [PurchaseRequestController::class, 'purchase_order'])->name('purchase.request.order');
     Route::get('/order', [PurchaseOrderController::class, 'index'])->name('purchase.order');
     Route::get('/order/delete/{id}', [PurchaseOrderController::class, 'delete'])->name('purchase.order.delete');
     Route::get('/order/approve/{id}', [PurchaseOrderController::class, 'approve'])->name('purchase.order.approve');
     Route::get('/order/decline/{id}/{pr_id}', [PurchaseOrderController::class, 'decline'])->name('purchase.order.decline');
     Route::get('/order/invoice', [PurchaseOrderController::class, 'invoice'])->name('purchase.invoice');
     Route::get('/order/details/{id}/{pr_id}', [PurchaseOrderController::class, 'details'])->name('purchase.order.details');
+    Route::get('/order/exports/{id}/{pr_id}', [PurchaseOrderController::class, 'exports'])->name('purchase.order.exports');
+
+    Route::get('/order/products/delete/{id}/{pr_id}', [PurchaseOrderController::class, 'delete_products'])->name('purchase.order.products.delete');
+
+    Route::get('/receiving', [PurchaseOrderController::class, 'receiving'])->name('purchase.receiving');
+    Route::post('/receiving/approve/{id}', [PurchaseOrderController::class, 'receiving_approve'])->name('purchase.receiving.approve');
 
     Route::get('/laporan/invoice', [LaporanController::class, 'index'])->name('purchase.laporan.invoice');
+    Route::get('/laporan/gaji', [LaporanController::class, 'gaji'])->name('purchase.laporan.gaji');
+    Route::get('/laporan/laba', [LaporanController::class, 'laba'])->name('purchase.laporan.laba');
 });
 
 Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function(){
@@ -115,6 +124,7 @@ Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/invoice/delete/{id}', [ProductsController::class, 'invoice_delete'])->name('products.invoice.delete');
     Route::post('/invoice', [ProductsController::class, 'new_invoice'])->name('products.invoice');
     Route::post('/invoice/payment', [ProductsController::class, 'update_invoice'])->name('products.invoice.payment');
+    Route::get('/invoice/exports/{id}', [ProductsController::class, 'invoice_export'])->name('products.invoice.export');
 });
 
 // rack route

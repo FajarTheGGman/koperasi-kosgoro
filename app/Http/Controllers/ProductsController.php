@@ -18,6 +18,8 @@ use App\Models\Invoice;
 use App\Models\InvoiceProduct;
 use App\Models\Notification as Notif;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class ProductsController extends Controller
 {
     public function index(){
@@ -209,6 +211,18 @@ class ProductsController extends Controller
             'invoice' => $invoice,
             'type' => 'view'
         ]);
+    }
+
+    public function invoice_export($id){
+        $users = Users::where('email', Session::get('email'))->first();
+        $invoice = Invoice::where('id', $id)->first();
+        $products = InvoiceProduct::where('invoice_id', $id)->get();
+        $pdf = Pdf::loadview('exports.invoice_exports', [
+            'products' => $products,
+            'invoice' => $invoice,
+            'type' => 'view'
+        ])->setOptions([ 'defaultFont' => 'sans-serif']);
+        return $pdf->setPaper('a4')->stream();
     }
 
     public function invoice_delete($id){

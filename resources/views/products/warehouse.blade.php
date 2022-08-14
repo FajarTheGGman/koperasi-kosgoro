@@ -18,6 +18,7 @@
                                 <th>Barcode</th>
                                 <th>Sell Price</th>
                                 <th>Rak</th>
+                                <th>Expired Date</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
@@ -42,6 +43,7 @@
                                     </td>
                                     <td>Rp.{{ $data->sell_price }}</td>
                                     <td>{{ $data->rack->name }}</td>
+                                    <td>{{ $data->expired_date }}</td>
                                     <td>
                                         <a href="{{ route('products.warehouse.delete', $data->id) }}" class='btn btn-danger btn-sm'>Delete</a>
                                     </td>

@@ -14,7 +14,9 @@
                                 <th>Nomor Invoice</th>
                                 <th>Status Pembayaran</th>
                                 <th>Payment Type</th>
+                                <th>Modal Barang</th>
                                 <th>Total Transaksi</th>
+                                <th>Total Income</th>
                                 <th>Tanggal Transaksi</th>
                                 <th>Action</th>
                             </tr>
@@ -33,14 +35,20 @@
                                             <span class='badge bg-danger'>{{ $data->status_pembayaran }}</span>
                                         @endif
                                     </td>
-                                    <td><b class='text text-warning'>{{ $data->payment }}</b></td>
+                                    <td><b class='text text-primary'>{{ $data->payment }}</b></td>
                                     <td>
-                                        <b class='text text-danger'>Rp.{{ $data->total }}</b>
+                                        <b class='text text-warning'>Rp. {{ App\Models\InvoiceProduct::where('invoice_id', $data->id)->sum('price') }}</b>
+                                    </td>
+                                    <td>
+                                        <b class='text text-success'>Rp.{{ $data->total }}</b>
+                                    </td>
+                                    <td>
+                                        <b class='text text-primary'>Rp. {{ $data->total - App\Models\InvoiceProduct::where('invoice_id', $data->id)->sum('price') }}</b>
                                     </td>
                                     <td>{{ $data->tanggal_pembayaran }}</td>
                                     <td>
                                         <a href="{{ route('products.invoice.detail', $data->id) }}" class='btn btn-sm btn-primary btn-sm'><span data-feather="eye"></span> Details</a>
-                                        <a href="{{ route('products.invoice.delete', $data->id) }}" class='btn btn-danger btn-sm ml-4 mt-2'><span data-feather='trash'></span> Delete</span>
+                                        <a href="{{ route('products.invoice.delete', $data->id) }}" class='btn btn-danger btn-sm ml-4'><span data-feather='trash'></span> Delete</span>
                                     </td>
                                 </tr>
                             @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Users;
 use App\Models\Invoice;
+use App\Models\InvoiceProduct;
 use App\Models\ProductsPurchase;
 
 class LaporanController extends Controller

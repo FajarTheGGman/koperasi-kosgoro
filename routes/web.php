@@ -102,6 +102,8 @@ Route::group(['prefix' => 'purchase', 'middleware' => ['Auth', 'ACL']], function
     Route::get('/laporan/invoice', [LaporanController::class, 'index'])->name('purchase.laporan.invoice');
     Route::get('/laporan/gaji', [LaporanController::class, 'gaji'])->name('purchase.laporan.gaji');
     Route::get('/laporan/laba', [LaporanController::class, 'laba'])->name('purchase.laporan.laba');
+
+    Route::get('/laporan/laba/exports', [LaporanController::class, 'laba_exports'])->name('purchase.laporan.laba.exports');
 });
 
 Route::group(['prefix' => 'products', 'middleware' => ['Auth', 'ACL']], function(){

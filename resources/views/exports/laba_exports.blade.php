@@ -1,21 +1,9 @@
-@extends('.template.app')
-
-@section('content')
-	<main class="content">
-	    <div class="container-fluid p-0">
-            <h1 class="h3 mb-3"><strong>Laporan</strong> Laba</h1>
-            <div class='card'>
-                <div class='card-body'>
-                    <h4>Data Laba</h4>
-                    <!-- button export -->
-                    <div class="row mt-2 mb-2">
-                        <div class="col-md-12">
-                            <div class="float-right">
-                                <a href="{{ route('purchase.laporan.laba.exports') }}" class="btn btn-success btn-sm"><i data-feather="file-text"></i> Export</a>
-                            </div>
-                        </div>
-                    </div>
-                    <table class='table' id="data">
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+                    <table>
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -27,7 +15,6 @@
                                 <th>Total Transaksi</th>
                                 <th>Total Income</th>
                                 <th>Tanggal Transaksi</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -55,26 +42,9 @@
                                         <b class='text text-primary'>Rp. {{ $data->total - App\Models\InvoiceProduct::where('invoice_id', $data->id)->sum('price') }}</b>
                                     </td>
                                     <td>{{ $data->tanggal_pembayaran }}</td>
-                                    <td>
-                                        <a href="{{ route('products.invoice.detail', $data->id) }}" class='btn btn-sm btn-primary btn-sm'><span data-feather="eye"></span> Details</a>
-                                        <a href="{{ route('products.invoice.delete', $data->id) }}" class='btn btn-danger btn-sm ml-4'><span data-feather='trash'></span> Delete</span>
-                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-    </main>
-@endsection
-
-@section('js')
-    <script>
-        $(document).ready(function(){
-            $("#data").DataTable({
-                responsive: true,
-            });
-        });
-    </script>
-@endsection
+</body>
+</html>
